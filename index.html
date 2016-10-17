@@ -73,5 +73,11 @@ window.onload = function(){
 	<p v-show="myData.length==0">暂无数据。。</p>
 	<p>{{wrong}}</p>
 </body>
-
+<!--	
+通过vue-resource中的jsonp获取数据接口，
+	涉及键盘事件@keyup 与 阻止默认事件 @keydown.up.prevent，
+	jsonp请求数据的两种状态，一成功二失败；
+	学习数据绑定，除了jsonp还有post和get两种方式，
+	在当前li下面禁止再次请求数据
+-->
 </html>
