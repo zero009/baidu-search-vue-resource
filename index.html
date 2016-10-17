@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>百度搜索框</title>	  
+	<script src="js/vue.js"></script>
+	<script src="js/vue-resource.js"></script>
+</head>
+<style>
+	input{
+		height: 30px;
+		line-height: 30px;
+		font-size: 28px;
+	}
+	ul li{
+		font-size: 24px;
+		line-height: 30px;
+	}
+	.gray{
+		background: #ccc;
+		color:blue;
+	}
+</style>
+<script>
+window.onload = function(){
+	new Vue({
+		el:'body',
+		data:{
+			myData:[],
+			now:-1,
+			wrong:'',
+			t1:''
+		},
+		methods:{
+			get:function(ev){
+				if(ev.keyCode == 38 || ev.keyCode==40)return;
+				if(ev.keyCode == 13){
+					window.open('https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=0&rsv_idx=1&tn=baidu&wd='+this.t1+'');
+				}
+ 				this.$http.jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?',{wd:this.t1},{jsonp:'cb'}).then(function(res){
+ 					this.myData = res.data.s;
+ 				},function(res){
+ 					if(res.status==404){
+ 						this.wrong = "请检查您的网络连接是否已连接！"
+ 					};
+ 				})
+			},
+			changeDown:function(){
+				this.now++;
+				if(this.now == this.myData.length){
+					this.now=-1;					
+				}
+				this.t1=this.myData[this.now];
+			},
+			changeUp:function(){
+				this.now--;
+				if(this.now==-2){
+					this.now=this.myData.length-1;
+				}
+				this.t1=this.myData[this.now];
+			}
+		}
+	})
+}
+	
+</script>
+<body>
+	<h2>请输入您所需要查找的内容</h2>
+	<input type="text"  v-model="t1" @keyup="get($event)" @keydown.up.prevent="changeUp()" @keydown.down="changeDown()" />
+	<ul>
+		<li v-for="data in myData" :class="{gray:now==$index}">{{data}}</li>
+	</ul>
+	<p v-show="myData.length==0">暂无数据。。</p>
+	<p>{{wrong}}</p>
+</body>
+
+</html>
